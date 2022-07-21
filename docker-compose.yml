@@ -1,0 +1,86 @@
+#Docker-compose.yaml tiré du tutoriel https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose
+version: '3'
+services:
+
+  #PHP Service
+  ie_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: digitalocean.com/php
+    container_name: ie_app
+    restart: unless-stopped
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: ie_webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${APP_PORT}:80"
+      - "${APP_PORT_SSL}:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #MySQL Service
+  db:
+    image: mysql:5.7.22
+    container_name: ie_db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${FORWARD_DB_PORT}:3306"
+    environment:
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+
+  #NPM
+  npm:
+    image: node:12.14
+    container_name: ie_npm
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    entrypoint: ['npm']
+    networks:
+      - app-network
+
+  redis:
+    image: 'redis:alpine'
+    container_name: ie_redis
+    ports:
+      - '${FORWARD_REDIS_PORT:-6379}:6399'
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local

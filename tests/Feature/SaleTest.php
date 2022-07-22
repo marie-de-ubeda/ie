@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class SaleTest extends TestCase
 {
     use RefreshDatabase;
-	
+    
     /**
      * Fetch Stack Trace in console log
      * @return void
@@ -34,5 +34,16 @@ class SaleTest extends TestCase
         );
         $this->assertCount(1, Sale::all());
         $response->assertStatus(201);
+    }
+    
+    public function test_name_cannot_be_null()
+    {
+        $response = $this->post(
+            '/v1/sales',
+            [
+                'name'=>"",
+            ]
+        );
+        $response->assertSessionHasErrors(['name']);
     }
 }

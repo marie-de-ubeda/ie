@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Category;
-use Illuminate\Http\Request;
+use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 
@@ -11,10 +11,10 @@ class CategoryController extends Controller
 {
     /**
      * Category Store
-     * @param Request $request
+     * @param CategoryStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
         $category = Category::create([
             "name" => $request->name,

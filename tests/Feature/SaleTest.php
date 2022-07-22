@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Sale;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,7 +27,7 @@ class SaleTest extends TestCase
     public function test_a_sale_can_be_created()
     {
         $response = $this->post(
-            '/v1/categories',
+            '/v1/sales',
             [
                 'name'=>"BROCANTE - VENTE UNIQUEMENT EN LIVE",
             ]

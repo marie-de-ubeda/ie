@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/status','Api\MainController@checkApiStatus');
+
+Route::post('/categories','Api\CategoryController@store');

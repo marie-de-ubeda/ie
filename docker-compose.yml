@@ -39,9 +39,9 @@ services:
       - app-network
 
   #MySQL Service
-  db:
+  ie_exo_db:
     image: mysql:5.7.22
-    container_name: ie_db
+    container_name: ie_exo_db
     restart: unless-stopped
     tty: true
     ports:

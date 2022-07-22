@@ -2,12 +2,24 @@
 
 namespace Tests\Feature;
 
+use App\Category;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CategoryTest extends TestCase
 {
+    use RefreshDatabase;
+    /**
+     * Fetch Stack Trace in console log
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutExceptionHandling();
+    }
+
     /**
      * A basic feature test example.
      *
@@ -20,8 +32,9 @@ class CategoryTest extends TestCase
             'summary'=>"Chineur invétéré ou novice, les ventes courantes vous offrent une variété de lots à des prix accessibles."
         ]);
 
-        $response->assertOk();
+//        $response->assertOk();
 
-//        $this->assertCount(1,Category:all());
+        $this->assertCount(1,Category::all());
+        $response->assertStatus(201);
     }
 }

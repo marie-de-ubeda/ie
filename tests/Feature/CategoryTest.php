@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CategoryTest extends TestCase
 {
     use RefreshDatabase;
+	
     /**
      * Fetch Stack Trace in console log
      * @return void

@@ -22,3 +22,4 @@ Route::get('/status','Api\MainController@checkApiStatus');
 
 Route::post('/categories','Api\CategoryController@store');
 Route::post('/sales','Api\SaleController@store');
+Route::post('/items','Api\ItemController@store');

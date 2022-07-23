@@ -2,12 +2,23 @@
 
 namespace Tests\Feature;
 
+use App\Item;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ItemTest extends TestCase
 {
+    /**
+     * Fetch Stack Trace in console log
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutExceptionHandling();
+    }
+    
     /**
      * A basic feature test example.
      *
@@ -19,7 +30,7 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'category_id'=>1,
-                'sale_id'=>1,
+                'sale_id'=>2,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"live",
                 'pricing' =>

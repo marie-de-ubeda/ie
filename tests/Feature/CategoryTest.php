@@ -51,7 +51,7 @@ class CategoryTest extends TestCase
                 'summary'=>""
             ]
         );
-		dd($response->getContent());
+//		dd($response->getContent());
         $response->assertJsonValidationErrors(['name','summary']);
     }
 }

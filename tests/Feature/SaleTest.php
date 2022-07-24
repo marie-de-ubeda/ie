@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SaleTest extends TestCase
 {
-    use RefreshDatabase;
+//    use RefreshDatabase;
     
     /**
      * Fetch Stack Trace in console log
@@ -18,7 +18,7 @@ class SaleTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->withoutExceptionHandling();
+//        $this->withoutExceptionHandling();
     }
     
     /**
@@ -26,7 +26,8 @@ class SaleTest extends TestCase
      */
     public function test_a_sale_can_be_created()
     {
-        $response = $this->post(
+        $response = $this->json(
+			'post',
             '/v1/sales',
             [
                 'name'=>"BROCANTE - VENTE UNIQUEMENT EN LIVE",
@@ -38,12 +39,13 @@ class SaleTest extends TestCase
     
     public function test_name_cannot_be_null()
     {
-        $response = $this->post(
+        $response = $this->json(
+			'post',
             '/v1/sales',
             [
                 'name'=>"",
             ]
         );
-        $response->assertSessionHasErrors(['name']);
+        $response->assertJsonValidationErrors(['name']);
     }
 }

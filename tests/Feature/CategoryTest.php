@@ -18,7 +18,7 @@ class CategoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->withoutExceptionHandling();
+//        $this->withoutExceptionHandling();
     }
 
     /**
@@ -28,9 +28,11 @@ class CategoryTest extends TestCase
      */
     public function test_a_category_can_be_created()
     {
-        $response = $this->post(
+        $response = $this->json(
+			'post',
             '/v1/categories',
             [
+				'id'=>1,
                 'name'=>"Vente de mobilier courant",
                 'summary'=>"Chineur invétéré ou novice, les ventes courantes vous offrent une variété de lots à des prix accessibles."
             ]
@@ -41,13 +43,15 @@ class CategoryTest extends TestCase
     
     public function test_name_and_summary_cannot_be_null()
     {
-        $response = $this->post(
+        $response = $this->json(
+			'post',
             '/v1/categories',
             [
                 'name'=>"",
                 'summary'=>""
             ]
         );
-        $response->assertSessionHasErrors(['name','summary']);
+		dd($response->getContent());
+        $response->assertJsonValidationErrors(['name','summary']);
     }
 }

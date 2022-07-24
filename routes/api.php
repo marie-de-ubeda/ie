@@ -23,3 +23,5 @@ Route::get('/status','Api\MainController@checkApiStatus');
 Route::post('/categories','Api\CategoryController@store');
 Route::post('/sales','Api\SaleController@store');
 Route::post('/items','Api\ItemController@store');
+Route::get('/items/{item}','Api\ItemController@show');
+Route::get('/items/{auction_type?}','Api\ItemController@index');

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\ItemResource;
 use App\Item;
+use Illuminate\Http\Request;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -43,7 +45,7 @@ class ItemTest extends TestCase
                         ]
                 ]
         ];
-        $response = $this->post('/v1/items', $data);
+        $response = $this->json('post', '/v1/items', $data);
 //        $this->assertCount(1, Item::all());
         $structure =[
             "id",
@@ -472,5 +474,102 @@ class ItemTest extends TestCase
         );
         
         $response->assertJsonValidationErrors(['pricing.estimates.currency']);
+    }
+    
+    public function test_items_collection_all()
+    {
+        $response = $this->json('get', '/v1/items');
+        $structure =[ [
+            "id",
+            "category"=>[
+                'id',
+                'name',
+                'summary'
+            ],
+            "sale" => [
+                'id',
+                'name',
+            ],
+            "description",
+            "auction_type",
+            "pricing"=>[
+                'estimates'=>[
+                    'max',
+                    'min',
+                    'currency'
+                ]
+            ],
+            "last_updated"]
+        ];
+        $response->assertJsonStructure($structure);
+        $response->assertStatus(200);
+    }
+    
+    public function test_items_collection_filter_auction_type_live()
+    {
+        $response = $this->json('get', '/v1/items/?auction_type=live');
+        $structure =[ [
+            "id",
+            "category"=>[
+                'id',
+                'name',
+                'summary'
+            ],
+            "sale" => [
+                'id',
+                'name',
+            ],
+            "description",
+            "auction_type",
+            "pricing"=>[
+                'estimates'=>[
+                    'max',
+                    'min',
+                    'currency'
+                ]
+            ],
+            "last_updated"]
+        ];
+//      $json = $response->json();
+        $response->assertJsonStructure($structure);
+        $response->assertJsonFragment(['auction_type'=>'live']);
+        $response->assertStatus(200);
+    }
+    
+    public function test_items_get_by_id()
+    {
+        $response = $this->json('get', '/v1/items/2');
+        $structure =[
+            "id",
+            "category"=>[
+                'id',
+                'name',
+                'summary'
+            ],
+            "sale" => [
+                'id',
+                'name',
+            ],
+            "description",
+            "auction_type",
+            "pricing"=>[
+                'estimates'=>[
+                    'max',
+                    'min',
+                    'currency'
+                ]
+            ],
+            "last_updated"
+        ];
+//      $json = $response->json();
+        $response->assertJsonStructure($structure);
+        $response->assertJsonFragment(['id'=>2]);
+        $response->assertStatus(200);
+    }
+    
+    public function test_items_get_by_id_not_found()
+    {
+        $response = $this->json('get', '/v1/items/1562');
+        $response->assertStatus(404);
     }
 }

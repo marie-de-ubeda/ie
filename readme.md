@@ -17,7 +17,7 @@ FORWARD_DB_PORT=3394
 ## Set Up
 - Démarrer le projet  => `docker-compose build`
 - Lancer les migrations de la DB => `docker-compose exec ie_app php artisan migrate`
-- Réinitialiser la DB et l'auto-increment => `docker-compose exec ie_app php artisan refresh`
+- Réinitialiser la DB et l'auto-increment => `docker-compose exec ie_app php artisan migrate:refresh`
 - Lancer les tests PHP Unit => `docker-compose exec ie_app composer test`
 - Lancer un test en particulier => `docker-compose exec ie_app composer test -- --filter=test_an_item_can_be_created`
 
@@ -114,7 +114,7 @@ protected function mapApiRoutes()
 
 - Je conseille d'utiliser la commande php artisan migrate:refresh entre les tests PostMan et PHPUnit afin de bien réinitialiser l'auto-incrementation des clés primaires.
   Bien sûr, cette commande est à proscrire en prod.
-  Pour les tests PHPUnit, j'utilse le trait RefreshDatabase. Par conséquent, il faudrait sûrement implémenter une DB test dédiée (Sqlite par ex.) pour lancer les tests PHPUnit.
+  Pour les tests PHPUnit, j'utilise le trait RefreshDatabase. Par conséquent, il faudrait sûrement implémenter une DB test dédiée (Sqlite par ex.) pour lancer les tests PHPUnit.
 
 
 

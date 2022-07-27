@@ -77,28 +77,31 @@ class ItemStoreRequest extends FormRequest
     
     protected function failedValidation(Validator $validator)
     {
-       
-        $id_type_error = $validator->errors()->get("id");
-        $auction_type_error = $validator->errors()->get("auction_type");
-//      dd($auction_type_error);
         
-        if ($id_type_error ==="The id has already been taken.") {
-            throw new HttpResponseException(response()->noContent(409));
-        } elseif ($id_type_error ==="ValidationError: id should be numerical, got 'badly-formatted-id' instead" ||
-            $auction_type_error ==="ValidationError: missing property auction_type") {
-            $response = [
-            'status' => true,
-            'error' => $validator->errors()->first(),
-            ];
-            throw new HttpResponseException(response()->json($response, 400));
-        } elseif ($this->wantsJson()) {
+        $id_type_error = $validator->errors()->get("id") ? $validator->errors()->get("id")[0] : false;
+        $auction_type_error = $validator->errors()->get("auction_type") ? $validator->errors()->get("auction_type")[0] : false ;
+//      dd($this->wantsJson());
+        if ($this->wantsJson()) {
             $response = response()->json([
                 'success' => false,
                 'message' => 'The given data was invalid.',
                 'errors' => $validator->errors()
             ]);
-//          dd($response);
             throw new HttpResponseException($response, 422);
+        } elseif ($auction_type_error) {
+            $response = [
+                'status' => true,
+                'error' => $auction_type_error,
+            ];
+            throw new HttpResponseException(response()->json($response, 400));
+        } elseif ($id_type_error ==="The id has already been taken.") {
+            throw new HttpResponseException(response()->noContent(409));
+        } elseif ($id_type_error) {
+            $response = [
+                'status' => true,
+                'error' => $id_type_error,
+            ];
+            throw new HttpResponseException(response()->json($response, 400));
         }
     }
 }

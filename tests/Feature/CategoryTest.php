@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CategoryTest extends TestCase
 {
     use RefreshDatabase;
-	
+    
     /**
      * Fetch Stack Trace in console log
      * @return void
@@ -29,10 +29,10 @@ class CategoryTest extends TestCase
     public function test_a_category_can_be_created()
     {
         $response = $this->json(
-			'post',
+            'post',
             '/v1/categories',
             [
-				'id'=>1,
+                'id'=>1,
                 'name'=>"Vente de mobilier courant",
                 'summary'=>"Chineur invétéré ou novice, les ventes courantes vous offrent une variété de lots à des prix accessibles."
             ]
@@ -44,14 +44,14 @@ class CategoryTest extends TestCase
     public function test_name_and_summary_cannot_be_null()
     {
         $response = $this->json(
-			'post',
+            'post',
             '/v1/categories',
             [
                 'name'=>"",
                 'summary'=>""
             ]
         );
-//		dd($response->getContent());
+//      dd($response->getContent());
         $response->assertJsonValidationErrors(['name','summary']);
     }
 }

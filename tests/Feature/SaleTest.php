@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SaleTest extends TestCase
 {
-//    use RefreshDatabase;
+    use RefreshDatabase;
     
     /**
      * Fetch Stack Trace in console log
@@ -30,9 +30,11 @@ class SaleTest extends TestCase
 			'post',
             '/v1/sales',
             [
+				'1',
                 'name'=>"BROCANTE - VENTE UNIQUEMENT EN LIVE",
             ]
         );
+//		dd($response);
         $this->assertCount(1, Sale::all());
         $response->assertStatus(201);
     }
@@ -43,6 +45,7 @@ class SaleTest extends TestCase
 			'post',
             '/v1/sales',
             [
+				'1',
                 'name'=>"",
             ]
         );

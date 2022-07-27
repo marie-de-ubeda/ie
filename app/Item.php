@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
 	
-    protected $fillable =['category_id','sale_id','description','auction_type','pricing'];
+    protected $fillable =['id','category_id','sale_id','description','auction_type','pricing'];
     protected $casts = [
         'pricing' => 'array',
         'pricing.estimates'=>'array'

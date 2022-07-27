@@ -18,7 +18,8 @@ class ItemController extends Controller
         $item = new Item();
         $datas = $request->all();
         $item->fill($datas)->save();
-		
+//		$i = new ItemResource($item);
+//		dd($i);
         return new ItemResource($item);
     }
     

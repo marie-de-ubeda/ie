@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Category;
 use App\Http\Resources\ItemResource;
 use App\Item;
+use App\Sale;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,7 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ItemTest extends TestCase
 {
-//    use RefreshDatabase;
+    use RefreshDatabase;
     
 //    /**
 //     * Fetch Stack Trace in console log
@@ -29,10 +31,13 @@ class ItemTest extends TestCase
      */
     public function test_an_item_can_be_created()
     {
+        $category = factory(Category::class)->create();
+        $sale = factory(Sale::class)->create();
+
         $data = [
             'id'=>1,
-            'category_id'=>2,
-            'sale_id'=>2,
+            'category_id'=>$category->id,
+            'sale_id'=>$sale->id,
             'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
             'auction_type'=>"live",
             'pricing' =>
@@ -46,30 +51,36 @@ class ItemTest extends TestCase
                 ]
         ];
         $response = $this->json('post', '/v1/items', $data);
-//        $this->assertCount(1, Item::all());
-        $structure =[
-            "id",
-            "category"=>[
-                    'id',
-                    'name',
-                    'summary'
-            ],
-            "sale" => [
-                    'id',
-                    'name',
-            ],
-            "description",
-            "auction_type",
-            "pricing"=>[
-                'estimates'=>[
-                    'max',
-                    'min',
-                    'currency'
-                ]
-            ],
-            "last_updated"];
-
+//      dd($response->json());
+        
+        
+        $structure =
+           [
+                "id",
+                "category"=>[
+                        'id',
+                        'name',
+                        'summary'
+                ],
+                "sale" => [
+                        'id',
+                        'name',
+                ],
+                "description",
+                "auction_type",
+                "pricing"=>[
+                    'estimates'=>[
+                        'max',
+                        'min',
+                        'currency'
+                    ]
+                ],
+                "last_updated"
+            ];
+//      dd($category->id);
         $response->assertJsonStructure($structure);
+//      dd($response);
+        $this->assertCount(1, Item::all());
         $response->assertStatus(201);
     }
     
@@ -84,8 +95,8 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'id'=>1,
-                'category_id'=>17,
-                'sale_id'=>2,
+                'category_id'=>25,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"live",
                 'pricing' =>
@@ -99,6 +110,7 @@ class ItemTest extends TestCase
                     ]
             ]
         );
+//      dd($response);
         $response->assertJsonValidationErrors(['category_id']);
     }
     
@@ -113,7 +125,7 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'id'=>1,
-                'category_id'=>2,
+                'category_id'=>1,
                 'sale_id'=>45,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"live",
@@ -139,8 +151,8 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"",
                 'auction_type'=>"live",
                 'pricing' =>
@@ -165,8 +177,8 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"",
                 'pricing' =>
@@ -192,8 +204,8 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>5,
                 'pricing' =>
@@ -217,8 +229,8 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer iaculis purus ac nunc aliquam commodo. Proin auctor eros at metus pulvinar condimentum. Donec vel pulvinar purus, sit amet sodales tellus. Etiam erat ante, egestas et auctor et, placerat at tellus. Fusce placerat iaculis dolor quis id.",
                 'pricing' =>
@@ -242,8 +254,8 @@ class ItemTest extends TestCase
             '/v1/items',
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"live",
                 
@@ -257,8 +269,8 @@ class ItemTest extends TestCase
         $datas =
         [
             'id'=>1,
-            'category_id'=>2,
-            'sale_id'=>2,
+            'category_id'=>1,
+            'sale_id'=>1,
             'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
             'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
             'pricing' =>
@@ -286,8 +298,8 @@ class ItemTest extends TestCase
         $datas =
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
                 'pricing' =>
@@ -314,8 +326,8 @@ class ItemTest extends TestCase
         $datas =
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
                 'pricing' =>
@@ -342,8 +354,8 @@ class ItemTest extends TestCase
         $datas =
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
                 'pricing' =>
@@ -370,8 +382,8 @@ class ItemTest extends TestCase
         $datas =
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
                 'pricing' =>
@@ -398,8 +410,8 @@ class ItemTest extends TestCase
         $datas =
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
                 'pricing' =>
@@ -425,8 +437,8 @@ class ItemTest extends TestCase
         $datas =
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
                 'pricing' =>
@@ -453,8 +465,8 @@ class ItemTest extends TestCase
         $datas =
             [
                 'id'=>1,
-                'category_id'=>2,
-                'sale_id'=>2,
+                'category_id'=>1,
+                'sale_id'=>1,
                 'description'=>"Affiche \"Automobilia\" le nouveau record du monde de l'heure , \r\nCastrol sur voiture Bugatti",
                 'auction_type'=>"Lorem ipsum dolor sit amet, consectetur .",
                 'pricing' =>
@@ -478,6 +490,7 @@ class ItemTest extends TestCase
     
     public function test_items_collection_all()
     {
+        $items = factory(Item::class, 10)->create();
         $response = $this->json('get', '/v1/items');
         $structure =[ [
             "id",
@@ -501,12 +514,15 @@ class ItemTest extends TestCase
             ],
             "last_updated"]
         ];
+        
         $response->assertJsonStructure($structure);
+        $this->assertCount(10, Item::all());
         $response->assertStatus(200);
     }
     
     public function test_items_collection_filter_auction_type_live()
     {
+        $items = factory(Item::class, 4)->create(['auction_type'=>'live']);
         $response = $this->json('get', '/v1/items/?auction_type=live');
         $structure =[ [
             "id",
@@ -533,12 +549,14 @@ class ItemTest extends TestCase
 //      $json = $response->json();
         $response->assertJsonStructure($structure);
         $response->assertJsonFragment(['auction_type'=>'live']);
+        $this->assertCount(4, Item::where('auction_type', '=', "live")->get());
         $response->assertStatus(200);
     }
     
     public function test_items_get_by_id()
     {
-        $response = $this->json('get', '/v1/items/2');
+        $item = factory(Item::class)->create(['id'=>1]);
+        $response = $this->json('get', '/v1/items/1');
         $structure =[
             "id",
             "category"=>[
@@ -563,7 +581,8 @@ class ItemTest extends TestCase
         ];
 //      $json = $response->json();
         $response->assertJsonStructure($structure);
-        $response->assertJsonFragment(['id'=>2]);
+        $response->assertJsonFragment(['id'=>1]);
+        $this->assertCount(1, Item::all());
         $response->assertStatus(200);
     }
     

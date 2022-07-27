@@ -25,9 +25,9 @@ FORWARD_DB_PORT=3394
 - J'ai généré les migrations de la DB et les models avec la commande
 `php artisan make:migration Item -m`
 - Les méthodes RollBack ont été créées afin de bien gérer le refresh de la DB
-- Le Model Item est le plus complet (App\Item). La persistance des datas est régie grâce à 
+- Le Model Item est le plus complet (App\Item). La persistance des datas est régie grâce à => 
 `protected $fillable =['id','category_id','sale_id','description','auction_type','pricing'];`
-- Le champ updated_at créé automatiquement par Laravel est devenu l'alias "last_updated" grâce à l'attribut `const UPDATED_AT = "last_updated";
+- Le champ updated_at créé automatiquement par Laravel est devenu l'alias "last_updated" grâce à l'attribut `const UPDATED_AT = "last_updated";`
 - Les champs pricing et pricing.estimates sont stockés en DB avec un type JSON. On peut manipuler ces datas et effectuer des requêtes grâce au cast array
 ``` PHP
 protected $casts = [
@@ -89,7 +89,7 @@ j'ai retiré le wrap array "data" autour des collections. J'ai placé cette règ
     JsonResource::withoutWrapping();
     }    
 ```
-Si souhaité on peut aussi établir le wrapp au niveau de chaque Resources\*Collection
+Si souhaité, on peut aussi établir le wrapp au niveau de chaque Resources\*Collection
 `public static $wrap = [];`
 
 - Afin de respecter le format des routes api avec le préfixe "v1", j'ai remplacé le route prefix "api" par "v1" dans App\Providers\RouteServiceProvider
@@ -110,11 +110,11 @@ protected function mapApiRoutes()
 - Les tests échoués PHP Unit venaient essentiellement des erreurs de contraintes clés primaires / clés étrangères.
   J'ai donc créé des Models Factory et adapté chacun de mes tests pour y remédier.
 
-- Les tests échoués Postman venaient de l'ordonnancement des requêtes. J'ai donc réécri la function "failedValidation" L.78 dans App\Http\Requests\ItemStoreRequest
+- Les tests échoués Postman venaient de l'ordonnancement des requêtes. J'ai donc repris l'algo de la function "failedValidation" L.78 dans App\Http\Requests\ItemStoreRequest
 
 - Je conseille d'utiliser la commande php artisan migrate:refresh entre les tests PostMan et PHPUnit afin de bien réinitialiser l'auto-incrementation des clés primaires.
   Bien sûr, cette commande est à proscrire en prod.
-  Pour les tests PHPUnit, j'utuilse le test RefreshDatabase. Par conséquent, il faudrait sûrement implémenter une DB test dédiée (Sqlite par ex.) pour lancer les tests PHPUnit.
+  Pour les tests PHPUnit, j'utilse le trait RefreshDatabase. Par conséquent, il faudrait sûrement implémenter une DB test dédiée (Sqlite par ex.) pour lancer les tests PHPUnit.
 
 
 
